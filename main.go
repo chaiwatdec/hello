@@ -2,13 +2,9 @@ package main
 
 import "fmt"
 
-func main(){
-	fmt.Println(factorial(5))
-}
-
-func factorial(num int) int{
-	if num==0 {
-		return 1
-	}
-	return num*factorial(num-1)
+func main() {
+	slice1 := []int{1, 2, 3}
+	slice2 := make([]int, 2) //slice fix 2
+	copy(slice2, slice1)     //copy fr slice1 to slice2
+	fmt.Println(slice2)
 }
