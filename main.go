@@ -1,20 +1,25 @@
 package main
-import s "strings"
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+	"github.com/gorilla/mux"
+)
 
-var p = fmt.Println
 func main() {
-	p("Contains:	", s.Contains("test", "es"))
-	p("Count:		", s.Count("test", "t"))	//count t
-	p("HasPrefix:	", s.HasPrefix("test", "te"))	//start with te?
-	p("HasSuffix:	", s.HasSuffix("test", "st"))	//end with st?
-	p("Index:		", s.Index("test", "t"))	//find position
-	p("Join:		", s.Join([]string{"a", "b"}, "-")) //join a a with -
-	p("Repeat:		", s.Repeat("a", 5)) //repeat 1 5 times
-	p("Replace:	", s.Replace("foo", "o", "0", -1)) 
-	p("Replace:	", s.Replace("fooo", "o", "0", 2))	//replace o with 0 2 time
-	p("Split:		", s.Split("a-b-c-d-e", "-")) //split with -
-	p("ToUpper:	", s.ToUpper("test"))
-	p("Len:		", len("hello")) //count string
+	router:=mux.NewRouter()
+	testDB:=map[string]int{"test1":10,"test2":20,"test3":30,}
+	
+	router.HandleFunc("/",func(w http.ResponseWriter, r *http.Request){
+			fmt.Fprintf(w,"TuM")
+	})	//call back function
+	router.HandleFunc("/test/{name}",func(w http.ResponseWriter, r *http.Request){
+		vars:=mux.Vars(r)
+		name:=vars["name"]
+		num:=testDB[name]
+		fmt.Fprintf(w,"Test: %s %d",name,num)
+	}).Methods("GET")
+
+	http.ListenAndServe(":8080",router)
 }
+
 
