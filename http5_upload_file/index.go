@@ -31,6 +31,5 @@ func uploadHandle(w http.ResponseWriter, r *http.Request){
 		return
 	}
 	defer f.Close()
-	io.Copy(f,file)
+	io.Copy(f,file)	//refer pkg os
 	fmt.Fprintf(w,"Upload Complete")
-}

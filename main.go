@@ -1,25 +1,39 @@
 package main
 import (
 	"fmt"
-	"net/http"
-	"github.com/gorilla/mux"
+	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
-	router:=mux.NewRouter()
-	testDB:=map[string]int{"test1":10,"test2":20,"test3":30,}
+	//connect db [db, err := sql.Open("mysql", "user:password@/dbname")]
+	db, err := sql.Open("mysql", "root:@/pythondb")
+	if err!=nil{
+		fmt.Println(err)
+	}
+	defer db.Close()	//close connection
+
+	//update data
+	stmt,err:=db.Prepare("update tbl_member set member_age=? where member_id=?")
+	stmt.Exec(60,"6")
+
+	if err!=nil{
+		fmt.Println(err)
+	}
+
+	//query data
+	rows,err:=db.Query("select * from tbl_member order by member_id asc")
+	if err!=nil{
+		fmt.Println(err)
+	}
+	for rows.Next(){
+		var id string
+		var name string
+		var lname string
+		var age int
+		err=rows.Scan(&id,&name,&lname,&age)
+
+		fmt.Printf("ID: %s Name: %s LName: %s Age: %d\n",id,name,lname,age)
+	}
 	
-	router.HandleFunc("/",func(w http.ResponseWriter, r *http.Request){
-			fmt.Fprintf(w,"TuM")
-	})	//call back function
-	router.HandleFunc("/test/{name}",func(w http.ResponseWriter, r *http.Request){
-		vars:=mux.Vars(r)
-		name:=vars["name"]
-		num:=testDB[name]
-		fmt.Fprintf(w,"Test: %s %d",name,num)
-	}).Methods("GET")
-
-	http.ListenAndServe(":8080",router)
 }
-
-
