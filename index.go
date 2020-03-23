@@ -2,23 +2,22 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"time"
+	"github.com/gorilla/mux"
 )
 
-type Cookie struct{
-	Name string
-	Value string
-	Expires time.Time		//refer package time
-}
-
 func main() {
-	http.HandleFunc("/",index)
-	http.ListenAndServe(":8080",nil)
-}
+	router:=mux.NewRouter()
+	testDB:=map[string]int{"test1":10,"test2":20,"test3":30,}
+	
+	router.HandleFunc("/",func(w http.ResponseWriter, r *http.Request){
+			fmt.Fprintf(w,"TuM")
+	})	//call back function
+	router.HandleFunc("/test/{name}",func(w http.ResponseWriter, r *http.Request){
+		//vars:=mux.Vars(r)
+		name:=mux.Vars(r)["name"]
+		num:=testDB[name]
+		fmt.Fprintf(w,"Test: %s %d",name,num)
+	}).Methods("GET")
 
-func index(w http.ResponseWriter, r *http.Request){
-	expiration:=time.Now().Add(time.Hour*24*365)	//define cookie age
-	cook:=http.Cookie{Name:"user",Value:"Tum",Expires:expiration} //create struct name:cook
-	http.SetCookie(w,&cook)
-	fmt.Fprintf(w,"Create Cookie ")
+	http.ListenAndServe(":8080",router)
 }
