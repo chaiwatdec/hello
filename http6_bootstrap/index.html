@@ -1,0 +1,43 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Result</title>
+    <meta name="viewpoint" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
+    <script>
+        function ConfirmDelete() {
+            return confirm("Are you Sure?");
+        }
+    </script>
+
+</head>
+<body>
+    <div class="container">
+        <h2>Show</h2>
+        <table Class="table table-bordered">
+            <thread>
+                <tr>
+                    <th width="5%">ID</th>
+                    <th width="20%">Name</th>
+                    <th width="20%">Last name</th>
+                    <th width="5%">Age</th>
+                    <th width="5%">Delete</th>
+                </tr>
+            </thread>
+            <tbody>
+            {{range.}}
+            <tr>
+                <td>{{.Id}}</td>
+                <td>{{.Name}}</td>
+                <td>{{.Lname}}</td>
+                <td>{{.Age}}</td>
+                <td><a href="/delete?id={{.Id}}" class="btn btn-danger" onclick="return ConfirmDelete();">Delete</a></td>
+            </tr>
+            {{ end }}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
